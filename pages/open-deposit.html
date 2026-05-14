@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <title>EasyDeposit - Підтвердження</title>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col">
+    <header class="bg-white shadow-sm py-4 px-8 flex justify-between items-center">
+        <div class="logo font-bold text-xl text-[#1a2b4b] cursor-pointer" onclick="location.href='../index.html'">EasyDeposit</div>
+        <div id="auth-group"></div>
+    </header>
+
+    <main class="container mx-auto flex-grow flex items-center justify-center p-6">
+        <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl w-full max-w-lg border border-slate-50">
+            <h2 class="text-3xl font-black text-[#1a2b4b] mb-2 text-center">Майже готово!</h2>
+            <p class="text-slate-400 text-center mb-8">Підтвердіть ваші контактні дані</p>
+            
+            <form id="final-step-form" class="space-y-6">
+                <div id="deposit-summary" class="bg-blue-50 p-4 rounded-2xl mb-6 text-sm text-blue-800 font-medium">
+                    </div>
+
+                <div>
+                    <label class="block text-xs font-black uppercase text-slate-400 mb-2 ml-2">Ваше ім'я</label>
+                    <input type="text" id="user-name" placeholder="Як до вас звертатися?" required
+                        class="w-full px-6 py-4 rounded-2xl border border-slate-100 bg-slate-50 outline-none focus:border-blue-500 transition font-bold">
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-black uppercase text-slate-400 mb-2 ml-2">Телефон</label>
+                    <input type="tel" id="user-phone" placeholder="+380" required
+                        class="w-full px-6 py-4 rounded-2xl border border-slate-100 bg-slate-50 outline-none focus:border-blue-500 transition font-bold">
+                </div>
+
+                <button type="submit" class="w-full bg-[#1a2b4b] text-white py-5 rounded-2xl font-bold text-lg hover:bg-blue-900 transition shadow-xl active:scale-95 uppercase tracking-widest">
+                    Оформити онлайн
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        // Показуємо дані, які юзер вибрав у калькуляторі
+        const pending = JSON.parse(localStorage.getItem('pendingDeposit'));
+        if (pending) {
+            document.getElementById('deposit-summary').innerHTML = `
+                Ви обрали: <span class="font-bold">${pending.amount.toLocaleString()} ₴</span> 
+                на <span class="font-bold">${pending.term} міс.</span> 
+                під <span class="font-bold">${pending.rate}%</span>
+            `;
+        }
+
+        document.getElementById('final-step-form').onsubmit = async (e) => {
+            e.preventDefault();
+            
+            const { data: { user } } = await supabaseClient.auth.getUser();
+
+            if (!user) {
+                alert("Будь ласка, спочатку увійдіть в систему!");
+                window.location.href = 'login.html';
+                return;
+            }
+
+            if (!pending) {
+                alert("Дані депозиту втрачено. Спробуйте ще раз з калькулятора.");
+                window.location.href = 'calculator.html';
+                return;
+            }
+
+            // Відправка в базу Supabase
+            const { error } = await supabaseClient
+                .from('deposits')
+                .insert([
+                    { 
+                        user_id: user.id, 
+                        amount: pending.amount, 
+                        term: pending.term, 
+                        rate: pending.rate 
+                    }
+                ]);
+
+            if (error) {
+                alert("Помилка: " + error.message);
+            } else {
+                alert("Вітаємо! Депозит успішно оформлено.");
+                // Очищаємо тимчасові дані
+                localStorage.removeItem('pendingDeposit');
+                window.location.href = 'profile.html';
+            }
+        };
+    </script>
+</body>
+</html>

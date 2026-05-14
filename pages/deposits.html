@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <title>EasyDeposit - Our Deposits</title>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col">
+
+    <header class="bg-white shadow-sm py-4 px-8 flex justify-between items-center sticky top-0 z-50">
+        <div class="logo-area flex items-center gap-2 font-bold text-xl cursor-pointer text-[#1a2b4b]" onclick="location.href='../index.html'">
+            <img src="../logo.png" alt="logo" class="w-8 h-8"> EasyDeposit
+        </div>
+        <nav class="hidden md:flex gap-6 font-medium text-slate-600">
+            <a href="../index.html" class="hover:text-blue-600 transition">Home</a>
+            <a href="deposits.html" class="text-blue-600 font-bold border-b-2 border-blue-600">Deposits</a>
+            <a href="calculator.html" class="hover:text-blue-600 transition">Calculator</a>
+        </nav>
+        <div id="auth-group" class="flex gap-3 items-center">
+            </div>
+    </header>
+
+    <main class="container mx-auto py-16 px-4">
+        <div class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-[#1a2b4b] mb-4">Investment Plans</h1>
+            <p class="text-slate-500 max-w-2xl mx-auto">Choose the best strategy for your future growth. All deposits are protected by state-of-the-art security systems.</p>
+        </div>
+
+        <div id="list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            </div>
+    </main>
+
+    <footer class="bg-white py-10 border-t border-slate-100 text-center mt-auto">
+        <p class="text-slate-400 text-sm">© EasyDeposit 2026. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/deposits.js"></script>
+    <script src="../js/auth.js"></script>
+    
+    <script>
+        // Рендеримо картки з масиву DEPOSIT_PLANS, який лежить у deposits.js
+        const list = document.getElementById('list');
+        
+        if (typeof DEPOSIT_PLANS !== 'undefined') {
+            list.innerHTML = DEPOSIT_PLANS.map(p => `
+                <div class="bg-white p-8 rounded-[2rem] shadow-xl shadow-slate-200 border-t-8 border-blue-600 flex flex-col justify-between transition transform hover:-translate-y-2">
+                    <div>
+                        <h3 class="text-2xl font-bold text-[#1a2b4b] mb-2">${p.name}</h3>
+                        <div class="text-4xl font-black text-blue-600 mb-4">${p.rate}% <span class="text-sm text-slate-400 font-normal italic">annual</span></div>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-6">${p.description || 'Secure investment plan'}</p>
+                    </div>
+                    
+                    <button class="w-full bg-[#1a2b4b] text-white py-3 rounded-xl font-bold hover:bg-blue-900 transition active:scale-95 shadow-lg shadow-blue-100" 
+                        onclick="sendRequest('${p.name}')">
+                        Choose Plan
+                    </button>
+                </div>
+            `).join('');
+        } else {
+            list.innerHTML = '<p class="col-span-full text-center text-red-500">Error: DEPOSIT_PLANS not found.</p>';
+        }
+    </script>
+</body>
+</html>
