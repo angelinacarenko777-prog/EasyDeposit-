@@ -8,34 +8,23 @@
     <title>EasyDeposit - Confirmation</title>
 </head>
 <body class="bg-slate-50 min-h-screen flex flex-col">
-    <header class="bg-white shadow-sm py-4 px-8 flex justify-between items-center">
+    <header class="bg-white shadow-sm py-4 px-8 flex justify-between items-center sticky top-0 z-50">
         <div class="logo font-bold text-xl text-[#1a2b4b] cursor-pointer" onclick="location.href='../index.html'">EasyDeposit</div>
         <div id="auth-group"></div>
     </header>
 
     <main class="container mx-auto flex-grow flex items-center justify-center p-6">
-        <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl w-full max-w-lg border border-slate-50">
-            <h2 class="text-3xl font-black text-[#1a2b4b] mb-2 text-center">Almost there!</h2>
-            <p class="text-slate-400 text-center mb-8">Confirm your contact details</p>
+        <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl w-full max-w-lg border border-slate-50 text-center">
+            <h2 class="text-3xl font-black text-[#1a2b4b] mb-2">Almost Ready!</h2>
+            <p class="text-slate-400 mb-8">Please confirm your selected deposit conditions</p>
             
-            <form id="final-step-form" class="space-y-6">
-                <div id="deposit-summary" class="bg-blue-50 p-4 rounded-2xl mb-6 text-sm text-blue-800 font-medium">
+            <form id="final-step-form" class="space-y-8">
+                <div id="deposit-summary" class="bg-blue-50 p-6 rounded-3xl text-sm text-blue-800 font-medium">
+                    <div class="animate-pulse">Loading conditions...</div>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-black uppercase text-slate-400 mb-2 ml-2">Full Name</label>
-                    <input type="text" id="user-name" placeholder="How should we address you?" required
-                        class="w-full px-6 py-4 rounded-2xl border border-slate-100 bg-slate-50 outline-none focus:border-blue-500 transition font-bold">
-                </div>
-                
-                <div>
-                    <label class="block text-xs font-black uppercase text-slate-400 mb-2 ml-2">Phone Number</label>
-                    <input type="tel" id="user-phone" placeholder="+1" required
-                        class="w-full px-6 py-4 rounded-2xl border border-slate-100 bg-slate-50 outline-none focus:border-blue-500 transition font-bold">
-                </div>
-
-                <button type="submit" class="w-full bg-[#1a2b4b] text-white py-5 rounded-2xl font-bold text-lg hover:bg-blue-900 transition shadow-xl active:scale-95 uppercase tracking-widest">
-                    Apply Online
+                <button type="submit" class="w-full bg-[#1a2b4b] text-white py-5 rounded-2xl font-bold text-lg hover:bg-blue-900 transition uppercase tracking-widest active:scale-95 shadow-lg">
+                    Open Online
                 </button>
             </form>
         </div>
@@ -44,39 +33,40 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/auth.js"></script>
     <script>
-        // Showing the data chosen by the user in the calculator
         const pending = JSON.parse(localStorage.getItem('pendingDeposit'));
-        if (pending) {
+        
+        if (pending && document.getElementById('deposit-summary')) {
             document.getElementById('deposit-summary').innerHTML = `
-                You selected: <span class="font-bold">${pending.amount.toLocaleString()} ₴</span> 
-                for <span class="font-bold">${pending.term} months</span> 
-                at <span class="font-bold">${pending.rate}%</span>
+                You selected: <span class="font-bold text-blue-600">${pending.amount.toLocaleString()} ₴</span> 
+                for <span class="font-bold text-blue-600">${pending.term} months</span> 
+                at <span class="font-bold text-blue-600">${pending.rate}%</span>
             `;
+        } else {
+            document.getElementById('deposit-summary').innerHTML = `<span class="text-red-500 font-medium">Deposit data not found. Please calculate your conditions again.</span>`;
         }
 
         document.getElementById('final-step-form').onsubmit = async (e) => {
             e.preventDefault();
             
-            const { data: { user } } = await supabaseClient.auth.getUser();
+            const { data: { session } } = await supabaseClient.auth.getSession();
 
-            if (!user) {
-                alert("Please log in first!");
+            if (!session || !session.user) {
+                alert("Please log in to open a deposit!");
                 window.location.href = 'login.html';
                 return;
             }
 
             if (!pending) {
-                alert("Deposit data lost. Please try again from the calculator.");
+                alert("Deposit data missing. Please recalculate.");
                 window.location.href = 'calculator.html';
                 return;
             }
 
-            // Sending to Supabase database
             const { error } = await supabaseClient
                 .from('deposits')
                 .insert([
                     { 
-                        user_id: user.id, 
+                        user_id: session.user.id, 
                         amount: pending.amount, 
                         term: pending.term, 
                         rate: pending.rate 
@@ -84,10 +74,9 @@
                 ]);
 
             if (error) {
-                alert("Error: " + error.message);
+                alert("Error saving deposit: " + error.message);
             } else {
-                alert("Congratulations! Your deposit has been successfully processed.");
-                // Clearing temporary data
+                alert("Success! Your deposit has been created.");
                 localStorage.removeItem('pendingDeposit');
                 window.location.href = 'profile.html';
             }

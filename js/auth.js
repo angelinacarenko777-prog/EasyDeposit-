@@ -1,26 +1,26 @@
-// 1. Конфігурація Supabase
-const SUPABASE_URL = 'https://mhcojnzhauelvnvnjelv.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_B3iTB_azJexCuA-mw4O5dA_jD7wPZRN';
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// 1. Supabase Configuration (Safely initialized)
+const URL_STR = 'https://mhcojnzhauelvnvnjelv.supabase.co';
+const KEY_STR = 'sb_publishable_B3iTB_azJexCuA-mw4O5dA_jD7wPZRN';
 
-// 2. Функція оновлення інтерфейсу
+if (!window.supabaseClient) {
+    window.supabaseClient = supabase.createClient(URL_STR, KEY_STR);
+}
+
+// 2. Update UI with English text
 async function updateUI() {
     const group = document.getElementById('auth-group');
     if (!group) return;
 
     try {
-        // Отримуємо сесію (getSession працює швидше для відображення кнопок)
         const { data: { session } } = await supabaseClient.auth.getSession();
-        
-        // Визначаємо шлях до сторінок залежно від того, де ми знаходимось
         const isSubPage = window.location.pathname.includes('/pages/');
         const pathPrefix = isSubPage ? '' : 'pages/';
 
         if (session && session.user) {
-            // КОРИСТУВАЧ УВІЙШОВ (ПОШТА ПІДТВЕРДЖЕНА)
+            // USER SIGNED IN
             const name = session.user.user_metadata?.full_name || 'User';
             group.innerHTML = `
-                <div class="flex items-center gap-4 animate-in fade-in duration-300">
+                <div class="flex items-center gap-4">
                     <a href="${pathPrefix}profile.html" class="flex items-center gap-2 group no-underline">
                         <div class="text-right hidden sm:block leading-none">
                             <p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Account</p>
@@ -36,7 +36,7 @@ async function updateUI() {
                 </div>
             `;
         } else {
-            // КОРИСТУВАЧ НЕ УВІЙШОВ АБО ЩЕ НЕ ПІДТВЕРДИВ ПОШТУ
+            // GUEST MODE
             group.innerHTML = `
                 <div class="flex items-center gap-3">
                     <a href="${pathPrefix}login.html" class="px-4 py-2 text-slate-600 font-bold hover:text-blue-600 transition text-sm no-underline">Sign In</a>
@@ -49,13 +49,11 @@ async function updateUI() {
     }
 }
 
-// 3. Функція виходу
+// 3. Logout Function
 async function logout() {
     await supabaseClient.auth.signOut();
-    // Повертаємо на головну сторінку після виходу
     const isSubPage = window.location.pathname.includes('/pages/');
     window.location.href = isSubPage ? '../index.html' : 'index.html';
 }
 
-// Запуск при завантаженні кожного файлу, де підключено цей скрипт
 document.addEventListener('DOMContentLoaded', updateUI);
