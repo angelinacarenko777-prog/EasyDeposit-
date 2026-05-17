@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/style.css">
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen">
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
 
     <header class="bg-white shadow-sm py-4 px-8 flex justify-between items-center sticky top-0 z-50">
         <div class="logo-area flex items-center gap-2 font-bold text-xl cursor-pointer text-[#1a2b4b]" onclick="location.href='../index.html'">
@@ -23,48 +23,56 @@
         <div id="auth-group" class="flex gap-3 items-center min-w-[150px] justify-end"></div>
     </header>
 
-    <main class="container mx-auto py-16 px-4 max-w-7xl">
+    <main class="container mx-auto flex-grow py-16 px-4 max-w-7xl">
         <div class="text-center max-w-2xl mx-auto mb-16">
-            <h1 class="text-4xl font-black text-[#1a2b4b] mb-4">Investment Plans</h1>
-            <p class="text-slate-500">Choose the best strategy for your future growth.</p>
+            <h1 class="text-4xl md:text-5xl font-black text-[#1a2b4b] mb-4 tracking-tight">Investment Plans</h1>
+            <p class="text-slate-500 text-base md:text-lg">Choose the best strategy for your future growth. All deposits are protected by state-of-the-art security systems.</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             
-            <div class="bg-white rounded-[2rem] p-8 shadow-xl border border-slate-100 flex flex-col justify-between">
+            <div class="bg-white rounded-[2rem] p-8 shadow-xl border border-slate-100 flex flex-col justify-between hover:shadow-2xl hover:-translate-y-1 transition duration-300">
                 <div>
                     <h3 class="text-2xl font-black text-[#1a2b4b] mb-2">Standard</h3>
-                    <div class="text-4xl font-black text-blue-600 mb-4">10% <span class="text-xs font-normal text-slate-400">annual</span></div>
-                    <p class="text-slate-400 text-sm mb-8">Базовий план для початківців із мінімальним порогом входу.</p>
+                    <div class="text-4xl font-black text-blue-600 mb-4">10% <span class="text-xs font-normal text-slate-400 italic">annual</span></div>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-8">Базовий план для початківців із мінімальним порогом входу.</p>
                 </div>
-                <button onclick="location.href='deposit.html?plan=standard'" class="bg-[#1a2b4b] text-white py-3.5 rounded-xl font-bold hover:bg-blue-900 transition w-full">Choose Plan</button>
+                <button onclick="location.href='deposit.html?plan=standard'" class="bg-[#1a2b4b] text-white px-6 py-3.5 rounded-xl font-bold hover:bg-blue-900 transition active:scale-95 w-full shadow-md">
+                    Choose Plan
+                </button>
             </div>
 
-            <div class="bg-white rounded-[2rem] p-8 shadow-xl border border-slate-100 flex flex-col justify-between">
+            <div class="bg-white rounded-[2rem] p-8 shadow-xl border border-slate-100 flex flex-col justify-between hover:shadow-2xl hover:-translate-y-1 transition duration-300">
                 <div>
                     <h3 class="text-2xl font-black text-[#1a2b4b] mb-2">Premium</h3>
-                    <div class="text-4xl font-black text-blue-600 mb-4">15% <span class="text-xs font-normal text-slate-400">annual</span></div>
-                    <p class="text-slate-400 text-sm mb-8">Оптимальний вибір для заощаджень та стабільного пасивного доходу.</p>
+                    <div class="text-4xl font-black text-blue-600 mb-4">15% <span class="text-xs font-normal text-slate-400 italic">annual</span></div>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-8">Оптимальний вибір для заощаджень та стабільного пасивного доходу.</p>
                 </div>
-                <button onclick="location.href='deposit.html?plan=premium'" class="bg-[#1a2b4b] text-white py-3.5 rounded-xl font-bold hover:bg-blue-900 transition w-full">Choose Plan</button>
+                <button onclick="location.href='deposit.html?plan=premium'" class="bg-[#1a2b4b] text-white px-6 py-3.5 rounded-xl font-bold hover:bg-blue-900 transition active:scale-95 w-full shadow-md">
+                    Choose Plan
+                </button>
             </div>
 
-            <div class="bg-white rounded-[2rem] p-8 shadow-xl border border-slate-100 flex flex-col justify-between">
+            <div class="bg-white rounded-[2rem] p-8 shadow-xl border border-slate-100 flex flex-col justify-between hover:shadow-2xl hover:-translate-y-1 transition duration-300">
                 <div>
                     <h3 class="text-2xl font-black text-[#1a2b4b] mb-2">VIP</h3>
-                    <div class="text-4xl font-black text-blue-600 mb-4">20% <span class="text-xs font-normal text-slate-400">annual</span></div>
-                    <p class="text-slate-400 text-sm mb-8">Максимальний дохід для великих депозитів та довгострокових інвесторів.</p>
+                    <div class="text-4xl font-black text-blue-600 mb-4">20% <span class="text-xs font-normal text-slate-400 italic">annual</span></div>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-8">Максимальний дохід для великих депозитів та довгострокових інвесторів.</p>
                 </div>
-                <button onclick="location.href='deposit.html?plan=vip'" class="bg-[#1a2b4b] text-white py-3.5 rounded-xl font-bold hover:bg-blue-900 transition w-full">Choose Plan</button>
+                <button onclick="location.href='deposit.html?plan=vip'" class="bg-[#1a2b4b] text-white px-6 py-3.5 rounded-xl font-bold hover:bg-blue-900 transition active:scale-95 w-full shadow-md">
+                    Choose Plan
+                </button>
             </div>
 
-            <div class="bg-white rounded-[2rem] p-8 shadow-xl border border-slate-100 flex flex-col justify-between">
+            <div class="bg-white rounded-[2rem] p-8 shadow-xl border border-slate-100 flex flex-col justify-between hover:shadow-2xl hover:-translate-y-1 transition duration-300">
                 <div>
                     <h3 class="text-2xl font-black text-[#1a2b4b] mb-2">Ultra Stealth</h3>
-                    <div class="text-4xl font-black text-blue-600 mb-4">25% <span class="text-xs font-normal text-slate-400">annual</span></div>
-                    <p class="text-slate-400 text-sm mb-8">Ексклюзивні умови для партнерів та закритих інвестиційних пулів.</p>
+                    <div class="text-4xl font-black text-blue-600 mb-4">25% <span class="text-xs font-normal text-slate-400 italic">annual</span></div>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-8">Ексклюзивні умови для партнерів та закритих інвестиційних пулів.</p>
                 </div>
-                <button onclick="location.href='deposit.html?plan=ultra'" class="bg-[#1a2b4b] text-white py-3.5 rounded-xl font-bold hover:bg-blue-900 transition w-full">Choose Plan</button>
+                <button onclick="location.href='deposit.html?plan=ultra'" class="bg-[#1a2b4b] text-white px-6 py-3.5 rounded-xl font-bold hover:bg-blue-900 transition active:scale-95 w-full shadow-md">
+                    Choose Plan
+                </button>
             </div>
 
         </div>

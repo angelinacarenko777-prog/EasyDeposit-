@@ -3,22 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Open Deposit - EasyDeposit</title>
+    <title>Deposit Details - EasyDeposit</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
 
-    <header class="bg-white shadow-sm py-4 px-8 flex justify-between items-center">
+    <header class="bg-white shadow-sm py-4 px-8 flex justify-between items-center sticky top-0 z-50">
         <div class="logo-area flex items-center gap-2 font-bold text-xl cursor-pointer text-[#1a2b4b]" onclick="location.href='../index.html'">
-            <img src="../logo.png" alt="logo" class="w-8 h-8"> 
             <span>EasyDeposit</span>
         </div>
         <nav class="hidden md:flex gap-6 font-medium text-slate-600">
             <a href="../index.html" class="hover:text-blue-600 transition">Home</a>
             <a href="deposits.html" class="hover:text-blue-600 transition">Deposits</a>
             <a href="calculator.html" class="hover:text-blue-600 transition">Calculator</a>
-            <a href="analytics.html" class="hover:text-blue-600 transition">Analytics</a>
         </nav>
         <div id="auth-group" class="flex gap-3 items-center min-w-[150px] justify-end"></div>
     </header>
@@ -42,15 +40,15 @@
             <div class="space-y-4 mb-8">
                 <div>
                     <label class="block text-sm font-bold text-slate-700 mb-2">Amount (₴)</label>
-                    <input type="number" id="amount-input" value="100000" class="w-full px-4 py-3 rounded-xl border border-slate-200 font-bold text-lg focus:outline-none bg-slate-50">
+                    <input type="number" id="amount-input" value="10000" min="1" class="w-full px-4 py-3 rounded-xl border border-slate-200 font-bold text-lg focus:outline-none focus:border-blue-500 bg-slate-50">
                 </div>
                 <div class="flex justify-between items-center text-sm p-1">
-                    <span class="text-slate-400">Monthly profit prediction:</span>
-                    <span id="profit-preview" class="font-bold text-green-600">0 ₴</span>
+                    <span class="text-slate-400 font-medium">Monthly profit prediction:</span>
+                    <span id="profit-preview" class="font-bold text-green-600 text-base">0 ₴</span>
                 </div>
             </div>
 
-            <button onclick="handleOpenOnline()" class="w-full bg-[#1a2b4b] text-white py-4 rounded-xl font-bold hover:bg-blue-950 transition text-center text-lg shadow-lg">
+            <button onclick="handleOpenOnline()" class="w-full bg-[#1a2b4b] text-white py-4 rounded-xl font-bold hover:bg-blue-950 transition text-center text-lg shadow-lg active:scale-[0.98]">
                 OPEN ONLINE
             </button>
         </div>
@@ -58,8 +56,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/auth.js"></script>
+    
     <script>
-        // Конфігурація відсотків
         const infoConfig = {
             standard: { title: 'Standard Plan', rate: 10 },
             premium: { title: 'Premium Plan', rate: 15 },
@@ -89,13 +87,46 @@
             document.getElementById('profit-preview').innerText = Math.round(result).toLocaleString() + ' ₴';
         }
 
-        document.getElementById('amount-input').addEventListener('input', liveCalculate);
-
         function handleOpenOnline() {
-            alert(`Opening ${infoConfig[chosenPlan].title}...`);
+            const amount = parseFloat(document.getElementById('amount-input').value) || 0;
+            
+            if (amount <= 0) {
+                alert("Please enter a valid amount!");
+                return;
+            }
+
+            const todayDate = new Date().toLocaleDateString('uk-UA');
+            const todayTime = new Date().toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' });
+
+            // 1. Запис у масив депозитів (для профілю)
+            const newDeposit = {
+                plan: infoConfig[chosenPlan].title,
+                rate: infoConfig[chosenPlan].rate,
+                amount: amount,
+                date: todayDate,
+                status: 'Active'
+            };
+            let existingDeposits = JSON.parse(localStorage.getItem('my_deposits')) || [];
+            existingDeposits.push(newDeposit);
+            localStorage.setItem('my_deposits', JSON.stringify(existingDeposits));
+
+            // 2. Одночасний запис в історію трансакцій (із типом 'investment' для мінусу)
+            const newTransaction = {
+                title: `Opened ${infoConfig[chosenPlan].title}`,
+                type: 'investment',
+                amount: amount,
+                date: todayDate,
+                time: todayTime
+            };
+            let existingTransactions = JSON.parse(localStorage.getItem('my_transactions')) || [];
+            existingTransactions.push(newTransaction);
+            localStorage.setItem('my_transactions', JSON.stringify(existingTransactions));
+
+            // Перенаправлення користувача в особистий кабінет
             window.location.href = 'profile.html';
         }
 
+        document.getElementById('amount-input').addEventListener('input', liveCalculate);
         document.addEventListener('DOMContentLoaded', setupPage);
     </script>
 </body>
