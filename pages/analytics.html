@@ -9,9 +9,21 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-slate-50 min-h-screen">
-    <header class="bg-white shadow-sm py-4 px-8 flex justify-between items-center">
-        <div class="logo-area font-bold text-xl text-[#1a2b4b] cursor-pointer" onclick="location.href='../index.html'">EasyDeposit</div>
-        <div id="auth-group"></div>
+    
+    <header class="bg-white shadow-sm py-4 px-8 flex justify-between items-center sticky top-0 z-50">
+        <div class="logo-area flex items-center gap-2 font-bold text-xl cursor-pointer text-[#1a2b4b]" onclick="location.href='../index.html'">
+            <img src="../logo.png" alt="logo" class="w-8 h-8"> 
+            <span>EasyDeposit</span>
+        </div>
+        
+        <nav class="hidden md:flex gap-6 font-medium text-slate-600">
+            <a href="../index.html" class="hover:text-blue-600 transition">Home</a>
+            <a href="deposits.html" class="hover:text-blue-600 transition">Deposits</a>
+            <a href="calculator.html" class="hover:text-blue-600 transition">Calculator</a>
+            <a href="analytics.html" class="hover:text-blue-600 transition">Analytics</a>
+        </nav>
+
+        <div id="auth-group" class="flex gap-3 items-center min-w-[150px] justify-end"></div>
     </header>
 
     <main class="container mx-auto py-12 px-6 max-w-5xl">
@@ -44,7 +56,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/auth.js"></script>
     <script>
-        // Ініціалізація інтерактивного графіка прибутку
         const ctx = document.getElementById('analyticsChart').getContext('2d');
         new Chart(ctx, {
             type: 'line',
