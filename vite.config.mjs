@@ -17,6 +17,8 @@ export default defineConfig({
         register: resolve(__dirname, 'pages/register.html'),
         settings: resolve(__dirname, 'pages/settings.html'),
         transactions: resolve(__dirname, 'pages/transactions.html'),
+        contacts: resolve(__dirname, 'pages/contacts.html'),
+        admin: resolve(__dirname, 'pages/admin.html'),
       },
     },
   },

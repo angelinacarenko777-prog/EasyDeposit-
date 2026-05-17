@@ -20,6 +20,7 @@
             <a href="deposits.html" class="hover:text-blue-600 transition">Deposits</a>
             <a href="calculator.html" class="hover:text-blue-600 transition">Calculator</a>
             <a href="analytics.html" class="hover:text-blue-600 transition">Analytics</a>
+            <a href="contacts.html" class="hover:text-blue-600 transition">Contacts</a>
         </nav>
 
         <div id="auth-group" class="flex gap-3 items-center min-w-[150px] justify-end"></div>
@@ -28,9 +29,7 @@
     <main class="container mx-auto py-12 px-6 max-w-6xl flex-grow">
         
         <div class="flex items-center gap-6 mb-10 p-6 bg-white rounded-3xl shadow-sm border border-slate-100">
-            <div class="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center font-black text-2xl shadow-lg" id="profile-avatar">
-                U
-            </div>
+            <div class="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center font-black text-2xl shadow-lg" id="profile-avatar">U</div>
             <div>
                 <h2 class="text-3xl font-black text-[#1a2b4b]" id="profile-name">Loading...</h2>
                 <p class="text-slate-400" id="profile-email">email@example.com</p>
@@ -64,26 +63,27 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            
             <div class="bg-white p-8 rounded-[2rem] shadow-xl border border-slate-50 flex flex-col justify-between min-h-[300px]">
                 <div>
                     <h3 class="text-xl font-black text-[#1a2b4b] mb-4 flex items-center gap-2">💳 My Bank Cards</h3>
-                    <div id="cards-list" class="space-y-3 mb-6">
-                        </div>
+                    <div id="cards-list" class="space-y-3 mb-6"></div>
                 </div>
-                
                 <div class="flex gap-2">
                     <input type="text" id="card-number-input" placeholder="3456 7898 7687 2345" maxlength="19" class="w-full px-4 py-3 rounded-xl border border-slate-200 font-mono text-sm focus:outline-none focus:border-blue-500 bg-slate-50">
-                    <button onclick="addNewCard()" class="px-6 py-3 bg-[#1a2b4b] text-white rounded-xl font-bold hover:bg-blue-900 transition whitespace-nowrap">Add</button>
+                    <button onclick="addNewCard()" class="px-6 py-3 bg-[#1a2b4b] text-white rounded-xl font-bold hover:bg-blue-900 transition">Add</button>
                 </div>
             </div>
 
             <div class="bg-white p-8 rounded-[2rem] shadow-xl border border-slate-50">
                 <h3 class="text-xl font-black text-[#1a2b4b] mb-4 flex items-center gap-2">📈 My Deposit Requests</h3>
-                <div id="deposits-list" class="space-y-4">
-                    </div>
+                <div id="deposits-list" class="space-y-4"></div>
             </div>
+        </div>
 
+        <div class="mt-12 text-center border-t border-slate-100 pt-6">
+            <a href="admin.html" class="inline-flex items-center gap-2 text-xs font-bold text-red-500 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-xl transition">
+                🛡️ Open Staff Admin Panel
+            </a>
         </div>
     </main>
 
@@ -91,7 +91,6 @@
     <script src="../js/auth.js"></script>
     
     <script>
-        // ГЛОБАЛЬНА ІНІЦІАЛІЗАЦІЯ ДАНИХ КОРИСТУВАЧА
         async function initDashboard() {
             try {
                 if (typeof supabaseClient !== 'undefined') {
@@ -106,85 +105,65 @@
                         return;
                     }
                 }
-            } catch (e) {
-                console.error("Supabase auth handling error:", e);
-            }
-
+            } catch (e) { console.error(e); }
             renderDeposits();
             renderCards();
         }
 
-        // РЕНДЕРИНГ СТВОРЕНИХ ДЕПОЗИТІВ
         function renderDeposits() {
             const listContainer = document.getElementById('deposits-list');
             const savedDeposits = JSON.parse(localStorage.getItem('my_deposits')) || [];
-
             if (savedDeposits.length === 0) {
-                listContainer.innerHTML = `<p class="text-slate-400 text-sm italic py-4">You don't have any deposit requests yet.</p>`;
+                listContainer.innerHTML = `<p class="text-slate-400 text-sm italic py-4">No deposits found.</p>`;
                 return;
             }
-
             listContainer.innerHTML = '';
             [...savedDeposits].reverse().forEach(dep => {
                 listContainer.innerHTML += `
-                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center hover:border-blue-300 transition duration-200">
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center">
                         <div>
                             <div class="font-bold text-[#1a2b4b]">${dep.plan}</div>
-                            <div class="text-xs text-slate-400 font-medium">Rate: ${dep.rate}% • Opened: ${dep.date}</div>
+                            <div class="text-xs text-slate-400 font-medium">Rate: ${dep.rate}% • ${dep.date}</div>
                         </div>
                         <div class="text-right">
                             <div class="font-black text-slate-800 text-lg">${parseFloat(dep.amount).toLocaleString()} ₴</div>
                             <span class="inline-block text-[10px] px-2 py-0.5 rounded-full font-bold bg-green-100 text-green-700 mt-1">${dep.status}</span>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
         }
 
-        // РЕНДЕРИНГ КАРТ
         function renderCards() {
             const cardsContainer = document.getElementById('cards-list');
             const savedCards = JSON.parse(localStorage.getItem('my_cards')) || [];
-
             if (savedCards.length === 0) {
-                cardsContainer.innerHTML = `<p class="text-slate-400 text-sm italic py-4">No bank cards linked to this profile.</p>`;
+                cardsContainer.innerHTML = `<p class="text-slate-400 text-sm italic py-4">No cards linked.</p>`;
                 return;
             }
-
             cardsContainer.innerHTML = '';
             savedCards.forEach((card, index) => {
                 cardsContainer.innerHTML += `
                     <div class="p-4 bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl flex justify-between items-center text-white shadow-md relative overflow-hidden">
                         <div class="z-10">
-                            <div class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Linked Card</div>
+                            <div class="text-xs text-slate-400 font-semibold tracking-wider">Linked Card</div>
                             <div class="font-mono text-base font-bold mt-1 tracking-widest">${card}</div>
                         </div>
-                        <button onclick="deleteCard(${index})" class="text-slate-400 hover:text-red-400 font-bold text-sm z-10 transition px-2 py-1">✕</button>
-                        <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-white/5 rounded-full pointer-events-none"></div>
-                    </div>
-                `;
+                        <button onclick="deleteCard(${index})" class="text-slate-400 hover:text-red-400 font-bold text-sm z-10 transition">✕</button>
+                    </div>`;
             });
         }
 
-        // ДОДАВАННЯ НОВОЇ КАРТКИ
         function addNewCard() {
             const input = document.getElementById('card-number-input');
             const rawValue = input.value.trim();
-
-            if (rawValue.replace(/\s/g, '').length < 12) {
-                alert("Please enter a valid card number!");
-                return;
-            }
-
+            if (rawValue.replace(/\s/g, '').length < 12) { return alert("Invalid card number!"); }
             let savedCards = JSON.parse(localStorage.getItem('my_cards')) || [];
             savedCards.push(rawValue);
             localStorage.setItem('my_cards', JSON.stringify(savedCards));
-            
             input.value = '';
             renderCards();
         }
 
-        // ВИДАЛЕННЯ КАРТКИ
         function deleteCard(index) {
             let savedCards = JSON.parse(localStorage.getItem('my_cards')) || [];
             savedCards.splice(index, 1);
@@ -192,17 +171,8 @@
             renderCards();
         }
 
-        // Форматування номеру карти пробілами під час вводу (кожні 4 цифри)
         document.getElementById('card-number-input').addEventListener('input', function (e) {
-            let target = e.target;
-            let position = target.selectionEnd;
-            let length = target.value.length;
-            
-            target.value = target.value.replace(/[^\d]/g, '').replace(/(.{4})/g, '$1 ').trim();
-            
-            if(position !== length) {
-                target.setSelectionRange(position, position);
-            }
+            e.target.value = e.target.value.replace(/[^\d]/g, '').replace(/(.{4})/g, '$1 ').trim();
         });
 
         document.addEventListener('DOMContentLoaded', initDashboard);

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - EasyDeposit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <style> body { display: none; } </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col" id="admin-body">
+
+    <header class="bg-white shadow-sm py-4 px-8 flex justify-between items-center">
+        <div class="logo-area flex items-center gap-2 font-bold text-xl text-[#1a2b4b]">
+            <img src="../logo.png" alt="logo" class="w-8 h-8"> 
+            <span>EasyDeposit <span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-md ml-1 font-mono">ADMIN</span></span>
+        </div>
+        <button onclick="location.href='profile.html'" class="text-sm font-bold text-blue-600 hover:underline">Exit Panel</button>
+    </header>
+
+    <main class="container mx-auto py-12 px-6 max-w-6xl flex-grow space-y-10">
+        
+        <div class="bg-white p-8 rounded-[2rem] shadow-xl border border-slate-100">
+            <h2 class="text-2xl font-black text-[#1a2b4b] mb-6">📁 Active User Deposit Applications</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-100 text-xs uppercase font-black text-slate-400 tracking-wider">
+                            <th class="pb-3">Plan</th>
+                            <th class="pb-3">Amount</th>
+                            <th class="pb-3">Rate</th>
+                            <th class="pb-3">Date</th>
+                            <th class="pb-3 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-deposits-table" class="text-sm divide-y divide-slate-50"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="bg-white p-8 rounded-[2rem] shadow-xl border border-slate-100">
+            <h2 class="text-2xl font-black text-[#1a2b4b] mb-6">✉️ User Feedback Messages</h2>
+            <div id="admin-messages-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/auth.js"></script>
+    
+    <script>
+        // ВПИШИ СЮДИ СВІЙ EMAIL, ЯКИЙ БУДЕ АДМІНІСТРАТОРОМ
+        const ADMIN_EMAIL = "angelinacarenko777@gmail.com"; 
+
+        async function checkAdminAccess() {
+            try {
+                if (typeof supabaseClient !== 'undefined') {
+                    const { data: { session } } = await supabaseClient.auth.getSession();
+                    
+                    // 1. Перевірка: чи користувач увійшов в систему?
+                    if (!session || !session.user) {
+                        alert("Access denied. Please log in first.");
+                        window.location.href = 'login.html';
+                        return;
+                    }
+
+                    // 2. Перевірка: чи є поточний email адмінським?
+                    if (session.user.email !== ADMIN_EMAIL) {
+                        alert("Access denied. You do not have administrator permissions.");
+                        window.location.href = 'profile.html';
+                        return;
+                    }
+
+                    // Якщо все супер — показуємо сторінку і завантажуємо дані
+                    document.getElementById('admin-body').style.display = 'flex';
+                    loadAdminData();
+                } else {
+                    // Якщо локально Supabase не підключено, дозволяємо вхід для тестів верстки
+                    document.getElementById('admin-body').style.display = 'flex';
+                    loadAdminData();
+                }
+            } catch (e) {
+                console.error("Auth check error:", e);
+                window.location.href = 'profile.html';
+            }
+        }
+
+        function loadAdminData() {
+            // Завантаження заявок на депозити
+            const depositsTable = document.getElementById('admin-deposits-table');
+            const deposits = JSON.parse(localStorage.getItem('my_deposits')) || [];
+
+            if(deposits.length === 0) {
+                depositsTable.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-400">No active deposit applications found.</td></tr>`;
+            } else {
+                depositsTable.innerHTML = deposits.map((dep, index) => `
+                    <tr>
+                        <td class="py-3 font-bold text-slate-800">${dep.plan || 'Standard'}</td>
+                        <td class="py-3 font-semibold text-blue-600">${parseFloat(dep.amount).toLocaleString()} ₴</td>
+                        <td class="py-3 font-mono">${dep.rate}%</td>
+                        <td class="py-3 text-slate-400">${dep.date || '18.05.2026'}</td>
+                        <td class="py-3 text-right">
+                            <button onclick="deleteDeposit(${index})" class="text-xs bg-red-50 text-red-600 font-bold px-3 py-1 rounded-lg hover:bg-red-100 transition"> Reject </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // Завантаження повідомлень з форми
+            const messagesContainer = document.getElementById('admin-messages-container');
+            const messages = JSON.parse(localStorage.getItem('admin_messages')) || [];
+
+            if(messages.length === 0) {
+                messagesContainer.innerHTML = `<p class="text-slate-400 text-sm md:col-span-2 text-center py-4">No new user messages.</p>`;
+            } else {
+                messagesContainer.innerHTML = messages.map(msg => `
+                    <div class="p-5 border border-slate-100 bg-slate-50/50 rounded-2xl relative">
+                        <span class="text-[10px] bg-blue-100 text-blue-700 font-black px-2 py-0.5 rounded absolute top-4 right-4">${msg.date}</span>
+                        <h4 class="font-black text-slate-800 text-base">${msg.name}</h4>
+                        <span class="text-xs text-slate-400 block mb-3">${msg.email}</span>
+                        <p class="text-slate-600 text-sm leading-relaxed bg-white p-3 rounded-xl border border-slate-100">${msg.message}</p>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function deleteDeposit(index) {
+            let deposits = JSON.parse(localStorage.getItem('my_deposits')) || [];
+            deposits.splice(index, 1);
+            localStorage.setItem('my_deposits', JSON.stringify(deposits));
+            loadAdminData();
+        }
+
+        // Замість звичайного завантаження викликаємо функцію перевірки прав
+        document.addEventListener('DOMContentLoaded', checkAdminAccess);
+    </script>
+</body>
+</html>
