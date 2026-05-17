@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions - EasyDeposit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col">
+    <header class="bg-white shadow-sm py-4 px-8 flex justify-between items-center sticky top-0 z-50">
+        <div class="logo-area flex items-center gap-2 font-bold text-xl cursor-pointer text-[#1a2b4b]" onclick="location.href='../index.html'">
+            <span>EasyDeposit</span>
+        </div>
+        <nav class="hidden md:flex gap-6 font-medium text-slate-600">
+            <a href="../index.html" class="hover:text-blue-600 transition">Home</a>
+            <a href="deposits.html" class="hover:text-blue-600 transition">Deposits</a>
+            <a href="profile.html" class="hover:text-blue-600 transition">Profile</a>
+        </nav>
+        <div id="auth-group"></div>
+    </header>
+
+    <main class="container mx-auto py-12 px-6 max-w-4xl flex-grow">
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h2 class="text-3xl font-black text-[#1a2b4b]">Transactions</h2>
+                <p class="text-slate-400">History of your payouts and operations</p>
+            </div>
+            <span class="bg-blue-50 text-blue-600 font-bold px-4 py-2 rounded-xl text-sm border border-blue-100">
+                Total Earned: +4,250 ₴
+            </span>
+        </div>
+
+        <div class="bg-white rounded-[2rem] shadow-xl border border-slate-50 overflow-hidden">
+            <div class="p-6 border-b border-slate-100 bg-slate-50/50 flex justify-between font-bold text-xs text-slate-400 uppercase tracking-wider">
+                <span>Operation details</span>
+                <span>Amount</span>
+            </div>
+            
+            <div class="divide-y divide-slate-100">
+                <div class="p-6 flex justify-between items-center hover:bg-slate-50/80 transition">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-green-50 text-green-600 flex items-center justify-center font-bold text-xl">💰</div>
+                        <div>
+                            <div class="font-bold text-[#1a2b4b]">Interest Payout</div>
+                            <div class="text-xs text-slate-400">Deposit #1024 • Sent to Mastercard •••• 5684</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-black text-green-500 text-lg">+1,450.00 ₴</span>
+                        <div class="text-[10px] text-slate-300 font-bold uppercase mt-0.5">Today, 14:20</div>
+                    </div>
+                </div>
+
+                <div class="p-6 flex justify-between items-center hover:bg-slate-50/80 transition">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-green-50 text-green-600 flex items-center justify-center font-bold text-xl">💰</div>
+                        <div>
+                            <div class="font-bold text-[#1a2b4b]">Interest Payout</div>
+                            <div class="text-xs text-slate-400">Deposit #1012 • Sent to Mastercard •••• 6464</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-black text-green-500 text-lg">+2,800.00 ₴</span>
+                        <div class="text-[10px] text-slate-300 font-bold uppercase mt-0.5">May 12, 2026</div>
+                    </div>
+                </div>
+
+                <div class="p-6 flex justify-between items-center hover:bg-slate-50/80 transition">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xl">📥</div>
+                        <div>
+                            <div class="font-bold text-[#1a2b4b]">New Deposit Opened</div>
+                            <div class="text-xs text-slate-400">Plan "Smart Growth" • 9 months</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-black text-[#1a2b4b] text-lg">-375,000.00 ₴</span>
+                        <div class="text-[10px] text-slate-300 font-bold uppercase mt-0.5">May 10, 2026</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/auth.js"></script>
+</body>
+</html>

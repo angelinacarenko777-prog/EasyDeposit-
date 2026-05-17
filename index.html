@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -47,22 +47,18 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/auth.js"></script>
     
     <script>
-        const SUPABASE_URL = 'https://mhcojnzhauelvnvnjelv.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_B3iTB_azJexCuA-mw4O5dA_jD7wPZRN';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
+        // Спрощена і чиста функція оновлення UI, що використовує глобальний клієнт з auth.js
         async function updateUI() {
             const group = document.getElementById('auth-group');
             if (!group) return;
 
             try {
-                // Отримуємо сесію користувача
                 const { data: { session } } = await supabaseClient.auth.getSession();
                 
                 if (session && session.user) {
-                    // Якщо вхід виконано (після підтвердження пошти)
                     const name = session.user.user_metadata?.full_name || 'User';
                     group.innerHTML = `
                         <div class="flex items-center gap-4 animate-in fade-in duration-300">
@@ -78,7 +74,6 @@
                         </div>
                     `;
                 } else {
-                    // Якщо користувач не увійшов або ще не підтвердив пошту
                     group.innerHTML = `
                         <div class="flex items-center gap-3">
                             <a href="pages/login.html" class="px-4 py-2 text-slate-600 font-bold hover:text-blue-600 transition text-sm no-underline">Sign In</a>
@@ -87,7 +82,7 @@
                     `;
                 }
             } catch (err) {
-                console.error("Помилка:", err);
+                console.error("UI Update Error:", err);
             }
         }
 
@@ -96,8 +91,7 @@
             window.location.reload();
         }
 
-        // Запускаємо перевірку
-        updateUI();
+        document.addEventListener('DOMContentLoaded', updateUI);
     </script>
 </body>
 </html>

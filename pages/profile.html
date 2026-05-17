@@ -1,46 +1,47 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/style.css">
-    <title>Мій профіль - EasyDeposit</title>
+    <title>My Profile - EasyDeposit</title>
 </head>
 <body class="bg-slate-50 min-h-screen">
     <header class="bg-white shadow-sm py-4 px-8 flex justify-between items-center sticky top-0 z-50">
-        <div class="logo-area flex items-center gap-2 font-bold text-xl cursor-pointer text-[#1a2b4b]" onclick="location.href='../index.html'">
-            <img src="../logo.png" alt="logo" class="w-8 h-8"> EasyDeposit
-        </div>
-        <nav class="hidden md:flex gap-6 font-medium text-slate-600">
-            <a href="../index.html" class="hover:text-blue-600">Home</a>
-            <a href="deposits.html" class="hover:text-blue-600">Deposits</a>
-            <a href="calculator.html" class="hover:text-blue-600">Calculator</a>
-        </nav>
-        <div id="auth-group" class="flex items-center gap-3"></div>
+        <div class="logo font-bold text-xl text-[#1a2b4b] cursor-pointer" onclick="location.href='../index.html'">EasyDeposit</div>
+        <div id="auth-group"></div>
     </header>
 
-    <main class="container mx-auto py-12 px-6">
-        <div class="flex items-center gap-6 mb-12 ml-4">
-            <div id="user-avatar" class="w-24 h-24 bg-blue-600 rounded-full flex items-center justify-center text-white text-4xl font-black shadow-xl shadow-blue-200">
-                ?
+    <main class="container mx-auto py-12 px-6 max-w-6xl">
+        <div class="flex items-center gap-6 mb-12">
+            <div id="profile-avatar" class="w-24 h-24 bg-blue-600 text-white rounded-full flex items-center justify-center text-4xl font-black border-4 border-white shadow-md">
+                U
             </div>
             <div>
-                <h2 id="user-display-name" class="text-4xl font-black text-[#1a2b4b]">Завантаження...</h2>
-                <p id="user-display-email" class="text-slate-400 font-medium"></p>
+                <h2 id="profile-name" class="text-3xl font-black text-[#1a2b4b]">User Name</h2>
+                <p id="profile-email" class="text-slate-400 font-medium">user@gmail.com</p>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div class="bg-white p-10 rounded-[3rem] shadow-xl border border-slate-50">
-                <h3 class="text-xl font-bold text-[#1a2b4b] mb-6 flex items-center gap-2">
-                    💳 My Bank Cards
-                </h3>
-                <div class="text-slate-400 italic mb-8">No cards added</div>
-                <div class="flex gap-2">
-                    <input type="text" placeholder="0000 0000 0000 0000" class="flex-grow bg-slate-50 border border-slate-100 px-6 py-4 rounded-2xl outline-none focus:border-blue-500">
-                    <button class="bg-[#1a2b4b] text-white px-8 py-4 rounded-2xl font-bold hover:bg-blue-900 transition">Add</button>
+            <div class="bg-white p-10 rounded-[3rem] shadow-xl border border-slate-50 flex flex-col justify-between min-h-[400px]">
+                <div>
+                    <h3 class="text-xl font-bold text-[#1a2b4b] mb-6 flex items-center gap-2">
+                        💳 My Bank Cards
+                    </h3>
+                    <div id="cards-container" class="space-y-3 mb-6">
+                        <div class="text-slate-400 italic">No cards added</div>
+                    </div>
                 </div>
+
+                <form id="add-card-form" class="flex gap-3 mt-auto">
+                    <input type="text" id="card-number-input" placeholder="3456 7898 7687 2345" required maxlength="19"
+                        class="flex-grow px-6 py-4 rounded-2xl border bg-slate-50 outline-none font-bold text-[#1a2b4b] text-sm tracking-widest">
+                    <button type="submit" class="px-6 py-4 bg-[#1a2b4b] text-white font-bold rounded-2xl hover:bg-blue-900 transition text-sm">
+                        Add
+                    </button>
+                </form>
             </div>
 
             <div class="bg-white p-10 rounded-[3rem] shadow-xl border border-slate-50">
@@ -48,7 +49,7 @@
                     📈 My Deposit Requests
                 </h3>
                 <div id="deposits-container" class="space-y-4">
-                    <div class="animate-pulse text-slate-300">Шукаємо ваші депозити...</div>
+                    <div class="text-slate-400 animate-pulse">Loading your deposits...</div>
                 </div>
             </div>
         </div>
@@ -57,62 +58,157 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/auth.js"></script>
     <script>
-        async function initProfile() {
-            const { data: { user } } = await supabaseClient.auth.getUser();
+        // Красиве форматування картки під час введення
+        document.getElementById('card-number-input').addEventListener('input', (e) => {
+            let v = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let matches = v.match(/\d{4,16}/g);
+            let match = matches && matches[0] || '';
+            let parts = [];
+
+            for (let i=0, len=match.length; i<len; i+=4) {
+                parts.push(match.substring(i, i+4));
+            }
+
+            e.target.value = parts.length > 0 ? parts.join(' ') : v;
+        });
+
+        async function loadProfileData() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
             
-            if (!user) {
+            if (!session || !session.user) {
                 window.location.href = 'login.html';
                 return;
             }
 
-            // Оновлюємо інфо про юзера
-            const name = user.user_metadata?.full_name || user.email.split('@')[0];
-            document.getElementById('user-display-name').innerText = name;
-            document.getElementById('user-display-email').innerText = user.email;
-            document.getElementById('user-avatar').innerText = name[0].toUpperCase();
+            const displayName = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
+            document.getElementById('profile-name').innerText = displayName;
+            document.getElementById('profile-email').innerText = session.user.email;
+            document.getElementById('profile-avatar').innerText = displayName[0].toUpperCase();
 
-            // ЗАВАНТАЖУЄМО ДЕПОЗИТИ
-            loadUserDeposits(user.id);
+            // ЗАВАНТАЖЕННЯ ДЕПОЗИТІВ
+            const depContainer = document.getElementById('deposits-container');
+            const { data: deposits, error: depError } = await supabaseClient
+                .from('deposits')
+                .select('*')
+                .eq('user_id', session.user.id)
+                .order('created_at', { ascending: false });
+
+            if (depError) {
+                depContainer.innerHTML = `<div class="text-red-500 text-sm">Error: ${depError.message}</div>`;
+            } else if (!deposits || deposits.length === 0) {
+                depContainer.innerHTML = `<div class="text-slate-400 italic text-center py-4">You have no active requests yet.</div>`;
+            } else {
+                depContainer.innerHTML = deposits.map(dep => `
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 flex justify-between items-center hover:border-blue-200 transition">
+                        <div>
+                            <div class="text-[10px] font-black uppercase text-blue-600 tracking-widest mb-1">Deposit active</div>
+                            <div class="text-2xl font-black text-[#1a2b4b]">${dep.amount.toLocaleString()} ₴</div>
+                            <div class="text-xs text-slate-400 font-medium">${dep.term} months at ${dep.rate}%</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-[10px] font-bold text-slate-300 uppercase">${new Date(dep.created_at).toLocaleDateString()}</div>
+                            <span class="mt-2 text-green-500 font-bold text-xs flex items-center gap-1 justify-end">
+                                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> In progress
+                            </span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // ЗАВАНТАЖЕННЯ КАРТОК
+            await loadCards(session.user.id);
         }
 
-        async function loadUserDeposits(userId) {
-            const container = document.getElementById('deposits-container');
-
-            const { data: deposits, error } = await supabaseClient
-                .from('deposits')
+        // ВДОСКОНАЛЕНА ФУНКЦІЯ ДЛЯ ВІДМАЛЬОВУВАННЯ КАРТОК З ЗАВЖДИ ВИДИМОЮ КНОПКОЮ
+        async function loadCards(userId) {
+            const cardContainer = document.getElementById('cards-container');
+            const { data: cards, error: cardError } = await supabaseClient
+                .from('cards')
                 .select('*')
                 .eq('user_id', userId)
                 .order('created_at', { ascending: false });
 
-            if (error) {
-                container.innerHTML = `<div class="text-red-400 text-sm">Помилка завантаження: ${error.message}</div>`;
+            if (cardError) {
+                cardContainer.innerHTML = `<div class="text-red-500 text-sm">Error: ${cardError.message}</div>`;
                 return;
             }
 
-            if (!deposits || deposits.length === 0) {
-                container.innerHTML = `<div class="text-slate-400 italic text-center py-4">У вас поки немає активних заявок.</div>`;
+            if (!cards || cards.length === 0) {
+                cardContainer.innerHTML = `<div class="text-slate-400 italic">No cards added</div>`;
                 return;
             }
 
-            // Рендеримо кожен депозит
-            container.innerHTML = deposits.map(dep => `
-                <div class="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 flex justify-between items-center hover:border-blue-200 transition">
-                    <div>
-                        <div class="text-[10px] font-black uppercase text-blue-600 tracking-widest mb-1">Депозит Активний</div>
-                        <div class="text-2xl font-black text-[#1a2b4b]">${dep.amount.toLocaleString()} ₴</div>
-                        <div class="text-xs text-slate-400 font-medium">${dep.term} місяців під ${dep.rate}%</div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-[10px] font-bold text-slate-300 uppercase">${new Date(dep.created_at).toLocaleDateString()}</div>
-                        <div class="mt-2 text-green-500 font-bold text-xs flex items-center gap-1 justify-end">
-                            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> В роботі
+            cardContainer.innerHTML = cards.map(card => {
+                const cleanNumber = card.card_number.replace(/\s+/g, '');
+                
+                // Визначаємо платіжну систему
+                let cardType = '💳 Card';
+                if (cleanNumber.startsWith('4')) cardType = ' Visa';
+                if (cleanNumber.startsWith('5')) cardType = '🔥 Mastercard';
+
+                const lastFour = cleanNumber.slice(-4);
+                const maskedNumber = `•••• •••• •••• ${lastFour}`;
+
+                return `
+                    <div class="bg-slate-50 px-6 py-4 rounded-2xl border border-slate-100 flex justify-between items-center hover:border-slate-300 transition">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] font-bold uppercase text-slate-400 tracking-wider mb-0.5">${cardType}</span>
+                            <span class="font-bold text-[#1a2b4b] tracking-widest text-sm">${maskedNumber}</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="text-[10px] font-bold text-green-500 bg-green-50 px-2.5 py-1 rounded-md uppercase">Linked</span>
+                            <button onclick="deleteCard('${card.id}', '${userId}')" class="text-xs font-black text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-xl transition uppercase tracking-wider">
+                                Unlink
+                            </button>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
-        document.addEventListener('DOMContentLoaded', initProfile);
+        // ФУНКЦІЯ ДЛЯ ВИДАЛЕННЯ КАРТКИ З БАЗИ Supabase
+        async function deleteCard(cardId, userId) {
+            if (!confirm("Are you sure you want to remove this bank card?")) return;
+
+            const { error } = await supabaseClient
+                .from('cards')
+                .delete()
+                .eq('id', cardId);
+
+            if (error) {
+                alert("Error deleting card: " + error.message);
+            } else {
+                await loadCards(userId); // Миттєво перемальовуємо список без перезавантаження сторінки!
+            }
+        }
+
+        // ДОДАВАННЯ НОВОЇ КАРТКИ
+        document.getElementById('add-card-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('card-number-input');
+            const cardNumber = input.value.trim();
+
+            if (cardNumber.replace(/\s+/g, '').length < 16) {
+                alert("Please enter a valid 16-digit card number.");
+                return;
+            }
+
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) return;
+
+            const { error } = await supabaseClient
+                .from('cards')
+                .insert([{ user_id: session.user.id, card_number: cardNumber }]);
+
+            if (error) {
+                alert("Error saving card: " + error.message);
+            } else {
+                input.value = '';
+                await loadCards(session.user.id);
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', loadProfileData);
     </script>
 </body>
 </html>
