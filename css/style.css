@@ -1,9 +1,4 @@
-/* 1. Base Tailwind layers integration */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* 2. Custom Design Tokens & Variables */
+/* Custom Design Tokens & Variables */
 :root {
     --primary: #6385cd;
     --bg: #f4f7fe;
@@ -11,7 +6,7 @@
     --white: #ffffff;
 }
 
-/* 3. Global HTML Elements adjustments */
+/* Global HTML Elements adjustments */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--bg);
@@ -22,7 +17,7 @@ body {
     min-height: 100vh;
 }
 
-/* 4. Custom Components (Compatible with Tailwind classes) */
+/* Custom Components (Compatible with Tailwind classes) */
 header {
     background: var(--white);
     padding: 12px 6%;
@@ -79,7 +74,7 @@ nav a:hover {
     color: white !important; 
 }
 
-.container { 
+main, .container { 
     flex: 1; 
     padding: 60px 6%; 
 }
@@ -138,6 +133,7 @@ footer {
     padding: 30px 0;
     text-align: center;
     border-top: 1px solid #eef2f8;
+    margin-top: auto; /* Виштовхує футер на самий низ сторінки */
 }
 
 .social-links { 
