@@ -1,0 +1,18 @@
+{
+  "bankName": "Ledger Bank",
+  "status": "Official Partner",
+  "promotion": {
+    "title": "Maximize Your Security with Ledger Bank",
+    "tag": "Special Advertisement",
+    "description": "Keep your digital assets and savings 100% protected. Open a high-yield savings account directly through our official partner Ledger Bank and enjoy advanced vault protection and top-tier annual rates.",
+    "badge": "🛡️ Officially Certified Partner",
+    "buttonText": "Visit Ledger Bank",
+    "isDecorativeOnly": true
+  },
+  "features": [
+    "Vault Protection Active",
+    "Cold-wallet protection technology",
+    "High-yield savings accounts"
+  ],
+  "updatedAt": "2026-05-21"
+}

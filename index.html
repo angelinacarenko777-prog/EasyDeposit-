@@ -15,27 +15,62 @@
             <span>EasyDeposit</span>
         </div>
         
-<nav class="hidden md:flex gap-6 font-medium text-slate-600">
-    <a href="index.html" class="text-blue-600 font-bold transition">Home</a>
-    <a href="pages/deposits.html" class="hover:text-blue-600 transition">Deposits</a>
-    <a href="pages/calculator.html" class="hover:text-blue-600 transition">Calculator</a>
-    <a href="pages/analytics.html" class="hover:text-blue-600 transition">Analytics</a>
-    <a href="pages/contacts.html" class="hover:text-blue-600 transition">Contacts</a>
-</nav>
+        <nav class="hidden md:flex gap-6 font-medium text-slate-600">
+            <a href="index.html" class="text-blue-600 font-bold transition">Home</a>
+            <a href="pages/deposits.html" class="hover:text-blue-600 transition">Deposits</a>
+            <a href="pages/calculator.html" class="hover:text-blue-600 transition">Calculator</a>
+            <a href="pages/analytics.html" class="hover:text-blue-600 transition">Analytics</a>
+            <a href="pages/contacts.html" class="hover:text-blue-600 transition">Contacts</a>
+        </nav>
 
         <div id="auth-group" class="flex gap-3 items-center min-w-[150px] justify-end"></div>
     </header>
 
     <main class="container mx-auto flex-grow flex flex-col justify-center items-center py-20 px-4 text-center">
-        <h1 class="text-5xl md:text-6xl font-extrabold text-[#1a2b4b] mb-6 leading-tight">
-            Welcome to <span class="text-blue-600">EasyDeposit</span>
-        </h1>
-        <p class="text-lg md:text-xl text-slate-500 mb-10">
-            Start your investing journey today. Choose a plan and grow your capital.
-        </p>
-        <button onclick="location.href='pages/deposits.html'" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-blue-700 transition shadow-lg active:scale-95">
-            Get Started
-        </button>
+        <div class="max-w-3xl mx-auto mb-16">
+            <h1 class="text-5xl md:text-6xl font-extrabold text-[#1a2b4b] mb-6 leading-tight">
+                Welcome to <span class="text-blue-600">EasyDeposit</span>
+            </h1>
+            <p class="text-lg md:text-xl text-slate-500 mb-10">
+                Start your investing journey today. Choose a plan and grow your capital.
+            </p>
+            <button onclick="location.href='pages/deposits.html'" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-blue-700 transition shadow-lg active:scale-95">
+                Get Started
+            </button>
+        </div>
+
+        <div class="w-full max-w-5xl my-8 text-left">
+            <div class="bg-gradient-to-r from-slate-900 via-[#0f172a] to-blue-950 text-white rounded-[2rem] p-8 md:p-12 shadow-2xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden group">
+                
+                <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition duration-500"></div>
+                
+                <div class="space-y-4 max-w-xl z-10">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-black tracking-widest uppercase bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full border border-blue-500/30">
+                            🔥 Special Advertisement
+                        </span>
+                        <span class="text-xs font-medium text-slate-400">Our Partner: Ledger Bank</span>
+                    </div>
+                    
+                    <h3 class="text-2xl md:text-3xl font-black tracking-tight text-white">
+                        Maximize Your Security with <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">Ledger Bank</span>
+                    </h3>
+                    
+                    <p class="text-slate-400 text-sm md:text-base leading-relaxed">
+                        Keep your digital assets and savings 100% protected. Open a high-yield savings account directly through our official partner **Ledger Bank** and enjoy advanced vault protection and top-tier annual rates.
+                    </p>
+                </div>
+
+                <div class="flex flex-col sm:flex-row md:flex-col gap-3 min-w-[200px] w-full md:w-auto z-10 text-center">
+                    <a href="#" onclick="event.preventDefault()" class="w-full block px-6 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-lg shadow-blue-600/20 transition active:scale-[0.98] no-underline">
+                        Visit Ledger Bank
+                    </a>
+                    <div class="flex items-center justify-center gap-1.5 text-xs text-slate-400 font-medium py-1">
+                        <span>🛡️ Officially Certified Partner</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer class="bg-white border-t border-slate-100 py-10 text-center">
@@ -51,7 +86,6 @@
     <script src="js/auth.js"></script>
     
     <script>
-        // Спрощена і чиста функція оновлення UI, що використовує глобальний клієнт з auth.js
         async function updateUI() {
             const group = document.getElementById('auth-group');
             if (!group) return;

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+    "user_id": "5sc65bb5-133e-4c5f-b978-b24c851a3219",
+    "plan_name": "VIP Strategy",
+    "amount": 10000.00,
+    "term": 12,
+    "rate": 20.0,
+    "status": "Active",
+    "created_at": "2026-05-18T14:30:00Z"
+  },
+  {
+    "id": "e9r8t7y6-u5i4-o3p2-a1s0-d9f8g7h6j5k4",
+    "user_id": "5sc65bb5-133e-4c5f-b978-b24c851a3219",
+    "plan_name": "Premium Plan",
+    "amount": 10000.00,
+    "term": 6,
+    "rate": 15.0,
+    "status": "Active",
+    "created_at": "2026-05-18T15:00:00Z"
+  },
+  {
+    "id": "789f01de-bc23-456a-ef78-90abcdef1234",
+    "user_id": "0c81505e-4a12-4aa4-818b-fe5d12c0c1df",
+    "plan_name": "Premium Plan",
+    "amount": 9986.00,
+    "term": 6,
+    "rate": 15.0,
+    "status": "Active",
+    "created_at": "2026-05-18T16:15:00Z"
+  },
+  {
+    "id": "456a789b-c123-def4-5678-90abcdef1234",
+    "user_id": "0c81505e-4a12-4aa4-818b-fe5d12c0c1df",
+    "plan_name": "Premium Plan",
+    "amount": 9953.00,
+    "term": 6,
+    "rate": 15.0,
+    "status": "Active",
+    "created_at": "2026-05-18T17:45:00Z"
+  }
+]

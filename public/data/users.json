@@ -1,0 +1,42 @@
+[
+  {
+    "id": "5sc65bb5-133e-4c5f-b978-b24c851a3219",
+    "display_name": "Angelina Tsarenko",
+    "email": "angelinacarenko777@gmail.com",
+    "role": "admin",
+    "provider": "Email",
+    "status": "active"
+  },
+  {
+    "id": "0c81505e-4a12-4aa4-818b-fe5d12c0c1df",
+    "display_name": "ange",
+    "email": "angelina@gmail.com",
+    "role": "investor",
+    "provider": "Email",
+    "status": "active"
+  },
+  {
+    "id": "d9ccf31a-0b4e-4fb5-95ca-b419f53e25f7",
+    "display_name": "hdjgf",
+    "email": "angrugf@gmail.com",
+    "role": "investor",
+    "provider": "Email",
+    "status": "active"
+  },
+  {
+    "id": "eea9576f-4b3d-44b0-a528-3f770cdf67c1",
+    "display_name": "dsg",
+    "email": "dsgsd@gmail.com",
+    "role": "investor",
+    "provider": "Email",
+    "status": "active"
+  },
+  {
+    "id": "683601de-540a-45d6-b89b-66ee317532bf",
+    "display_name": "ang",
+    "email": "grehfvb@gmail.com",
+    "role": "investor",
+    "provider": "Email",
+    "status": "active"
+  }
+]
