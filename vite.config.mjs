@@ -1,29 +1,50 @@
-import { defineConfig } from 'vite';
-import { resolve } from 'path';
+import { defineConfig } from 'vitest/config';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// Список усіх твоїх HTML-файлів
+const htmlPages = [
+  'index.html',
+  'admin.html',
+  'analytics.html',
+  'calculator.html',
+  'contacts.html',
+  'deposit.html',
+  'deposits.html',
+  'login.html',
+  'open-deposit.html',
+  'profile.html',
+  'register.html',
+  'settings.html',
+  'transactions.html'
+];
+
+// Автоматична генерація шляхів за прикладом викладача, з урахуванням папки pages
+const rollupInput = Object.fromEntries(
+  htmlPages.map((file) => {
+    // Якщо це index.html — він лежить у корені, інакше — у папці pages/
+    const filePath = file === 'index.html' ? file : `pages/${file}`;
+    return [
+      file.replace(/\.html$/, ''), 
+      resolve(__dirname, filePath)
+    ];
+  })
+);
 
 export default defineConfig({
-  root: './',
+  root: __dirname,
+  publicDir: 'public',
   build: {
-    outDir: 'dist',
     rollupOptions: {
-      input: {
-        main: resolve(__dirname, 'index.html'),
-        analytics: resolve(__dirname, 'pages/analytics.html'),
-        calculator: resolve(__dirname, 'pages/calculator.html'),
-        deposit: resolve(__dirname, 'pages/deposit.html'),
-        deposits: resolve(__dirname, 'pages/deposits.html'),
-        login: resolve(__dirname, 'pages/login.html'),
-        profile: resolve(__dirname, 'pages/profile.html'),
-        register: resolve(__dirname, 'pages/register.html'),
-        settings: resolve(__dirname, 'pages/settings.html'),
-        transactions: resolve(__dirname, 'pages/transactions.html'),
-        contacts: resolve(__dirname, 'pages/contacts.html'),
-        admin: resolve(__dirname, 'pages/admin.html'),
-      },
+      input: rollupInput
     },
+    outDir: 'dist',
+    emptyOutDir: true
   },
-  server: {
-    port: 3000,
-    open: true,
-  },
+  test: {
+    environment: 'node',
+    include: ['tests/**/*.test.js']
+  }
 });
