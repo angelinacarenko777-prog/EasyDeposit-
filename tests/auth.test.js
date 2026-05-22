@@ -1,6 +1,5 @@
 import { describe, test, expect } from 'vitest';
 
-// Функція валідації пароля для EasyDeposit безпеки
 function isPasswordSecure(password) {
     if (!password || password.length < 6) return false;
     
@@ -23,7 +22,7 @@ describe('Тестування системи авторизації та без
     });
 
     test('Має відхиляти паролі, які містять лише цифри або лише букви', () => {
-        expect(isPasswordSecure('1234567890')).toBe(false); // тільки цифри
-        expect(isPasswordSecure('onlyletters')).toBe(false); // тільки букви
+        expect(isPasswordSecure('1234567890')).toBe(false); 
+        expect(isPasswordSecure('onlyletters')).toBe(false); 
     });
 });

@@ -70,12 +70,10 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script>
-        // Ініціалізація клієнта з ТВОЇМИ даними
         const SUPABASE_URL = 'https://mhcojnzhauelvnvnjelv.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_B3iTB_azJexCuA-mw4O5dA_jD7wPZRN';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Функція реєстрації
         async function register() {
             const name = document.getElementById('reg-name').value;
             const email = document.getElementById('reg-email').value;
@@ -90,7 +88,6 @@
             btn.disabled = true;
 
             try {
-                // Виклик реєстрації в Supabase
                 const { data, error } = await supabaseClient.auth.signUp({
                     email: email,
                     password: pass,

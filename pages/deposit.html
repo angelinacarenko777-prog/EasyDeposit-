@@ -98,7 +98,6 @@
             const todayDate = new Date().toLocaleDateString('uk-UA');
             const todayTime = new Date().toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' });
 
-            // 1. Запис у масив депозитів (для профілю)
             const newDeposit = {
                 plan: infoConfig[chosenPlan].title,
                 rate: infoConfig[chosenPlan].rate,
@@ -110,7 +109,6 @@
             existingDeposits.push(newDeposit);
             localStorage.setItem('my_deposits', JSON.stringify(existingDeposits));
 
-            // 2. Одночасний запис в історію трансакцій (із типом 'investment' для мінусу)
             const newTransaction = {
                 title: `Opened ${infoConfig[chosenPlan].title}`,
                 type: 'investment',
@@ -122,7 +120,6 @@
             existingTransactions.push(newTransaction);
             localStorage.setItem('my_transactions', JSON.stringify(existingTransactions));
 
-            // Перенаправлення користувача в особистий кабінет
             window.location.href = 'profile.html';
         }
 

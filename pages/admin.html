@@ -49,7 +49,7 @@
     <script src="../js/auth.js"></script>
     
     <script>
-        // ВПИШИ СЮДИ СВІЙ EMAIL, ЯКИЙ БУДЕ АДМІНІСТРАТОРОМ
+
         const ADMIN_EMAIL = "angelinacarenko777@gmail.com"; 
 
         async function checkAdminAccess() {
@@ -57,25 +57,21 @@
                 if (typeof supabaseClient !== 'undefined') {
                     const { data: { session } } = await supabaseClient.auth.getSession();
                     
-                    // 1. Перевірка: чи користувач увійшов в систему?
                     if (!session || !session.user) {
                         alert("Access denied. Please log in first.");
                         window.location.href = 'login.html';
                         return;
                     }
 
-                    // 2. Перевірка: чи є поточний email адмінським?
                     if (session.user.email !== ADMIN_EMAIL) {
                         alert("Access denied. You do not have administrator permissions.");
                         window.location.href = 'profile.html';
                         return;
                     }
 
-                    // Якщо все супер — показуємо сторінку і завантажуємо дані
                     document.getElementById('admin-body').style.display = 'flex';
                     loadAdminData();
                 } else {
-                    // Якщо локально Supabase не підключено, дозволяємо вхід для тестів верстки
                     document.getElementById('admin-body').style.display = 'flex';
                     loadAdminData();
                 }
@@ -86,7 +82,6 @@
         }
 
         function loadAdminData() {
-            // Завантаження заявок на депозити
             const depositsTable = document.getElementById('admin-deposits-table');
             const deposits = JSON.parse(localStorage.getItem('my_deposits')) || [];
 
@@ -106,7 +101,6 @@
                 `).join('');
             }
 
-            // Завантаження повідомлень з форми
             const messagesContainer = document.getElementById('admin-messages-container');
             const messages = JSON.parse(localStorage.getItem('admin_messages')) || [];
 
@@ -131,7 +125,6 @@
             loadAdminData();
         }
 
-        // Замість звичайного завантаження викликаємо функцію перевірки прав
         document.addEventListener('DOMContentLoaded', checkAdminAccess);
     </script>
 </body>

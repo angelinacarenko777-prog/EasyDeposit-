@@ -1,6 +1,5 @@
 import { describe, test, expect } from 'vitest';
 
-// Імітація функцій керування адмінкою
 function updateDepositStatus(deposits, depositId, newStatus) {
     return deposits.map(dep => 
         dep.id === depositId ? { ...dep, status: newStatus } : dep
@@ -23,7 +22,7 @@ describe('Тестування логіки Адмін-панелі', () => {
         const updated = updateDepositStatus(mockDeposits, 1, 'Approved');
 
         expect(updated[0].status).toBe('Approved');
-        expect(updated[1].status).toBe('Pending'); // Другий залишається без змін
+        expect(updated[1].status).toBe('Pending'); 
     });
 
     test('Має фільтрувати повідомлення користувачів за ключовим словом в email', () => {

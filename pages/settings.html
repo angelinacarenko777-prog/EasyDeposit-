@@ -52,7 +52,6 @@
 
             if (Object.keys(updates).length === 0) return;
 
-            // Виклик вбудованого методу Supabase для оновлення даних поточного юзера
             const { error } = await supabaseClient.auth.updateUser(updates);
 
             msg.classList.remove('hidden', 'text-red-500', 'text-green-500');

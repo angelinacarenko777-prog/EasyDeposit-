@@ -1,4 +1,3 @@
-// 1. Твій масив (залишаємо як ти хотіла)
 const DEPOSIT_PLANS = [
     { 
         id: 1, 
@@ -30,12 +29,6 @@ const DEPOSIT_PLANS = [
     }
 ];
 
-// 2. Налаштування Supabase для відправки заявок
-const SUPABASE_URL = 'https://mhcojnzhauelvnvnjelv.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_B3iTB_azJexCuA-mw4O5dA_jD7wPZRN';
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// 3. Функція виводу карток з масиву
 function renderDeposits() {
     const grid = document.getElementById('deposits-grid');
     if (!grid) return;
@@ -53,7 +46,7 @@ function renderDeposits() {
                 <p class="font-bold text-slate-800">Term: ${plan.termMonths} Months</p>
             </div>
 
-            <button onclick="sendRequest('${plan.name}')" 
+            <button onclick="sendRequest('${plan.name}', ${plan.rate})" 
                 class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold hover:bg-blue-700 transition shadow-lg">
                 Choose Plan
             </button>
@@ -61,31 +54,56 @@ function renderDeposits() {
     `).join('');
 }
 
-// 4. Функція відправки в Supabase (виконуємо вимогу завдання)
-async function sendRequest(planName) {
-    const { data: { user } } = await supabaseClient.auth.getUser();
-
-    if (!user) {
-        alert("Будь ласка, спочатку зареєструйтесь або увійдіть!");
-        window.location.href = 'register.html';
+async function sendRequest(planName, planRate) {
+    const client = window.supabaseClient;
+    if (!client) {
+        alert("Помилка системи. Перезавантажте сторінку.");
         return;
     }
 
-    // Відправляємо дані в таблицю contact_requests
-    const { error } = await supabaseClient
+    const { data: { session } } = await client.auth.getSession();
+
+    if (!session || !session.user) {
+        alert("Будь ласка, спочатку зареєструйтесь або увійдіть!");
+        window.location.href = 'login.html';
+        return;
+    }
+
+    const user = session.user;
+
+    const amount = prompt(`Введіть суму для відкриття плану "${planName}" (грн):`, "10000");
+    if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+        alert("Некоректна сума депозиту!");
+        return;
+    }
+
+    const { error } = await client
         .from('contact_requests')
-        .insert([
-            { 
-                user_email: user.email, 
-                plan_name: planName 
-            }
-        ]);
+        .insert([{ user_email: user.email, plan_name: planName }]);
 
     if (error) {
-        alert("Помилка: " + error.message);
-    } else {
-        alert(`Вітаємо! Заявка на план "${planName}" відправлена. Ми зв'яжемося з вами за адресою ${user.email}`);
+        alert("Помилка Supabase: " + error.message);
+        return;
     }
+
+    const userStorageKey = `my_deposits_${user.email}`;
+    let savedDeposits = JSON.parse(localStorage.getItem(userStorageKey)) || [];
+    
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('uk-UA');
+
+    const newDeposit = {
+        plan: planName + " Plan",
+        rate: planRate,
+        date: formattedDate,
+        amount: parseFloat(amount),
+        status: "Active"
+    };
+
+    savedDeposits.push(newDeposit);
+    localStorage.setItem(userStorageKey, JSON.stringify(savedDeposits));
+
+    alert(`Вітаємо! План "${planName}" активовано. Депозит додано до вашого профілю.`);
 }
 
 document.addEventListener('DOMContentLoaded', renderDeposits);

@@ -1,6 +1,5 @@
 import { describe, test, expect } from 'vitest';
 
-// --- Функції валідації (вбудовані прямо в тест, щоб не шукати файли) ---
 function validateEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -27,7 +26,6 @@ function createFeedbackMessage(name, email, message) {
     };
 }
 
-// --- Самі тести ---
 describe('Тестування форми контактів та валідації', () => {
 
     describe('Валідація Email', () => {

@@ -4,7 +4,6 @@ import { dirname, resolve } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// Список усіх твоїх HTML-файлів
 const htmlPages = [
   'index.html',
   'admin.html',
@@ -21,10 +20,8 @@ const htmlPages = [
   'transactions.html'
 ];
 
-// Автоматична генерація шляхів за прикладом викладача, з урахуванням папки pages
 const rollupInput = Object.fromEntries(
   htmlPages.map((file) => {
-    // Якщо це index.html — він лежить у корені, інакше — у папці pages/
     const filePath = file === 'index.html' ? file : `pages/${file}`;
     return [
       file.replace(/\.html$/, ''), 

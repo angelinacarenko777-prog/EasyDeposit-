@@ -1,7 +1,6 @@
 import { describe, test, expect } from 'vitest';
 import { calculateDeposit, validateEmail, createFeedbackMessage } from '../js/finance.js';
 
-// --- ГРУПА 1: ТЕСТИ ДЛЯ КАЛЬКУЛЯТОРА ---
 describe('Тестування фінансового калькулятора EasyDeposit', () => {
 
     test('Розрахунок для 100,000 ₴ на 12 місяців (ставка 16.75%)', () => {
@@ -9,16 +8,16 @@ describe('Тестування фінансового калькулятора E
 
         expect(result.rate).toBe(16.75);
         expect(result.principal).toBe(100000);
-        expect(result.earned).toBe(16750); // 100k * 16.75%
-        expect(result.taxes).toBe(3266);   // 16750 * 19.5%
-        expect(result.net).toBe(13484);     // Чистий прибуток
+        expect(result.earned).toBe(16750); 
+        expect(result.taxes).toBe(3266);   
+        expect(result.net).toBe(13484);    
     });
 
     test('Розрахунок для 50,000 ₴ на 6 місяців (ставка 14.00%)', () => {
         const result = calculateDeposit(50000, 6);
 
         expect(result.rate).toBe(14.00);
-        expect(result.net).toBe(2818); // Очікуваний чистий прибуток за пів року
+        expect(result.net).toBe(2818); 
     });
 
     test('Захист від занадто малої суми (мінімум 10,000 ₴)', () => {
@@ -32,7 +31,6 @@ describe('Тестування фінансового калькулятора E
     });
 });
 
-// --- ГРУПА 2: ТЕСТИ ДЛЯ ФОРМИ КОНТАКТІВ (НОВІ) ---
 describe('Тестування форми контактів та валідації', () => {
 
     describe('Валідація Email', () => {

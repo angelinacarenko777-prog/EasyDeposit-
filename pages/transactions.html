@@ -46,15 +46,12 @@
     <script>
         function renderTransactions() {
             const container = document.getElementById('transactions-timeline');
-            
-            // 1. Завантажуємо трансакції
+
             let savedTransactions = JSON.parse(localStorage.getItem('my_transactions')) || [];
-            
-            // 2. Розумна синхронізація: якщо трансакцій нуль, але в профілі є депозити
+
             const savedDeposits = JSON.parse(localStorage.getItem('my_deposits')) || [];
             
             if (savedTransactions.length === 0 && savedDeposits.length > 0) {
-                // Робимо авто-міграцію старих депозитів в історію трансакцій
                 savedTransactions = savedDeposits.map(dep => ({
                     title: `Opened ${dep.plan}`,
                     type: 'investment',
@@ -65,7 +62,6 @@
                 localStorage.setItem('my_transactions', JSON.stringify(savedTransactions));
             }
 
-            // 3. Якщо трансакцій взагалі немає ніяких
             if (savedTransactions.length === 0) {
                 container.innerHTML = `
                     <div class="text-center py-12 flex flex-col items-center justify-center">
@@ -76,10 +72,8 @@
                 return;
             }
 
-            // 4. Генерація карток трансакцій
             container.innerHTML = '';
-            
-            // Сортуємо від найновіших до найстаріших
+
             [...savedTransactions].reverse().forEach(tx => {
                 const isInvestment = tx.type === 'investment';
                 const sign = isInvestment ? '-' : '+';
