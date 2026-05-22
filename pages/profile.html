@@ -36,7 +36,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+        <div id="quick-actions" class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
             <a href="analytics.html" class="flex items-center justify-between p-4 bg-white hover:bg-blue-50/50 border border-slate-200 hover:border-blue-300 rounded-2xl transition group shadow-sm">
                 <div class="flex items-center gap-3">
                     <span class="text-2xl">📈</span>
@@ -83,6 +83,10 @@
         </div>
     </main>
 
+    <footer class="bg-white border-t border-slate-100 py-6 text-center text-sm text-slate-400 space-y-2 mt-auto">
+        <p>© EasyDeposit 2026. All rights reserved.</p>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/auth.js"></script>
     
@@ -102,6 +106,9 @@
                         document.getElementById('profile-avatar').innerText = name[0].toUpperCase();
                         
                         cardStorageKey = `my_cards_${currentUserEmail}`;
+
+                        checkAdminAccess(currentUserEmail);
+
                     } else {
                         window.location.href = 'login.html';
                         return;
@@ -111,6 +118,26 @@
             
             renderDepositsFromSupabase();
             renderCards();
+        }
+
+        function checkAdminAccess(email) {
+            const adminEmail = 'angelinacarenko777@gmail.com';
+            
+            if (email.toLowerCase() === adminEmail.toLowerCase()) {
+                const actionsGrid = document.getElementById('quick-actions');
+                
+                actionsGrid.classList.add('sm:grid-cols-4');
+
+                actionsGrid.innerHTML += `
+                    <a href="admin.html" class="flex items-center justify-between p-4 bg-red-50 hover:bg-red-100/70 border border-red-200 hover:border-red-300 rounded-2xl transition group shadow-sm animate-pulse">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">🔒</span>
+                            <span class="font-bold text-red-700">Admin Panel</span>
+                        </div>
+                        <span class="text-red-400 group-hover:text-red-600 font-bold">➔</span>
+                    </a>
+                `;
+            }
         }
 
         async function renderDepositsFromSupabase() {
